@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'views/login_screen.dart';
+import 'views/main_menu.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,7 +19,6 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: const LoginScreen(),
-      debugShowCheckedModeBanner: false,
     );
   }
 }

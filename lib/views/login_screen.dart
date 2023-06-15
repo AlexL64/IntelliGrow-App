@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
+import 'package:intelli_grow/views/main_menu.dart';
+
 
 const users = {
-  'dribbble@gmail.com': '12345',
-  'hunter@gmail.com': 'hunter',
+  'test': '12345',
+  'test2': '54321',
 };
 
 class LoginScreen extends StatelessWidget {
@@ -44,7 +46,6 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
       home: Scaffold(
         resizeToAvoidBottomInset: false,
         extendBodyBehindAppBar: true,
@@ -58,9 +59,16 @@ class LoginScreen extends StatelessWidget {
             color: Colors.black,
           ),
           child: FlutterLogin(
+            userType: LoginUserType.name,
+            userValidator: (_) => null,
             logo: "lib/assets/images/intelligrow_logo_no_background.png",
             onLogin: _authUser,
             onSignup: _signupUser,
+            onSubmitAnimationCompleted: () {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (context) => const MainMenu(),
+              ));
+            },
             onRecoverPassword: (_) => null,
             theme: LoginTheme(
               primaryColor: Colors.green,
