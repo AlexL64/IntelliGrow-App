@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intelli_grow/widgets/bottom_navbar.dart';
 
-class MainMenu extends StatelessWidget {
-  const MainMenu({super.key});
+class Account extends StatelessWidget {
+  const Account({super.key});
 
   @override
   Widget build(BuildContext context) {

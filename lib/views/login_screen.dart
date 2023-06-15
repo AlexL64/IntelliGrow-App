@@ -1,25 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
-import 'package:intelli_grow/views/main_menu.dart';
+import 'package:intelli_grow/views/devices.dart';
 
 
 const users = {
-  'test': '12345',
-  'test2': '54321',
+  'test': 'test',
 };
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
-  Duration get loginTime => const Duration(milliseconds: 2250);
+  Duration get loginTime => const Duration(milliseconds: 1000);
 
   Future<String?> _authUser(LoginData data) {
     debugPrint('Name: ${data.name}, Password: ${data.password}');
     return Future.delayed(loginTime).then((_) {
-      if (!users.containsKey(data.name)) {
+      if (!users.containsKey(data.name.trim())) {
         return 'User not exists';
       }
-      if (users[data.name] != data.password) {
+      if (users[data.name.trim()] != data.password.trim()) {
         return 'Password does not match';
       }
       return null;
@@ -66,7 +65,7 @@ class LoginScreen extends StatelessWidget {
             onSignup: _signupUser,
             onSubmitAnimationCompleted: () {
               Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (context) => const MainMenu(),
+                builder: (context) => const Devices(),
               ));
             },
             onRecoverPassword: (_) => null,
