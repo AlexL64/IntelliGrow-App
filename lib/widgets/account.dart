@@ -15,7 +15,7 @@ class Account extends StatelessWidget {
         elevation: 0,
       ),
       body: const Center(
-        child: Row(
+        child: Column(
           children: [
             Text("Account"),
           ],

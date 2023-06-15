@@ -48,7 +48,6 @@ class LoginScreen extends StatelessWidget {
           ),
           child: FlutterLogin(
             userType: LoginUserType.name,
-            userValidator: (_) => null,
             logo: "lib/assets/images/intelligrow_logo_no_background.png",
             onLogin: _authUser,
             onSignup: _signupUser,
@@ -64,6 +63,7 @@ class LoginScreen extends StatelessWidget {
               pageColorLight: Colors.transparent,
               pageColorDark: Colors.transparent,
             ),
+            hideForgotPasswordButton: true,
           ),
         ),
       ),
