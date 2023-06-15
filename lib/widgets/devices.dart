@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-
-
 class Devices extends StatelessWidget {
   const Devices({super.key});
 
@@ -17,11 +15,7 @@ class Devices extends StatelessWidget {
         elevation: 0,
       ),
       body: const Center(
-        child: Row(
-          children: [
-            Text("Devices"),
-          ],
-        ),
+        child: Text("Devices"),
       ),
     );
   }

@@ -43,6 +43,7 @@ class _NavBarState extends State<Connected> {
           currentIndex: _selectedIndex,
           selectedItemColor: Colors.lightGreen,
           onTap: _onItemTapped,
+          iconSize: 32,
         ),
       ),
     );
