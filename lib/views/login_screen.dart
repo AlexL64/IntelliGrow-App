@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
-import 'package:intelli_grow/views/devices.dart';
+import 'package:intelli_grow/views/connected.dart';
 
 
 const users = {
@@ -32,16 +32,6 @@ class LoginScreen extends StatelessWidget {
     });
   }
 
-  /*Future<String> _recoverPassword(String name) {
-    debugPrint('Name: $name');
-    return Future.delayed(loginTime).then((_) {
-      if (!users.containsKey(name)) {
-        return 'User not exists';
-      }
-      return null;
-    });
-  }*/
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -65,7 +55,7 @@ class LoginScreen extends StatelessWidget {
             onSignup: _signupUser,
             onSubmitAnimationCompleted: () {
               Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (context) => const Devices(),
+                builder: (context) => const Connected(),
               ));
             },
             onRecoverPassword: (_) => null,

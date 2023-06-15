@@ -1,27 +1,17 @@
 import 'package:flutter/material.dart';
 
-class NavBar extends StatefulWidget {
-  const NavBar({super.key});
+class Connected extends StatefulWidget {
+  const Connected({super.key});
 
   @override
-  State<NavBar> createState() =>
-      _NavBarState();
+  State<Connected> createState() => _NavBarState();
 }
 
-class _NavBarState
-    extends State<NavBar> {
+class _NavBarState extends State<Connected> {
   int _selectedIndex = 0;
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Index 0: Devices',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 1: Account',
-      style: optionStyle,
-    ),
+    Text('Device list'),
+    Text('Account'),
   ];
 
   void _onItemTapped(int index) {
