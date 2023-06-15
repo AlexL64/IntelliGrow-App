@@ -37,7 +37,6 @@ class LoginScreen extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         resizeToAvoidBottomInset: false,
-        extendBodyBehindAppBar: true,
         body: Container(
           decoration: const BoxDecoration(
             image: DecorationImage(
