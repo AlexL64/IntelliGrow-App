@@ -6,8 +6,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
-  Duration get loginTime => const Duration(milliseconds: 1000);
-
   Future<String?> _authUser(LoginData data) async {
     try {
       final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
