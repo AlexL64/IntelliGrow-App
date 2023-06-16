@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intelli_grow/views/login_screen.dart';
 
 class Account extends StatelessWidget {
   const Account({super.key});
@@ -14,10 +16,23 @@ class Account extends StatelessWidget {
         backgroundColor: Colors.grey[50],
         elevation: 0,
       ),
-      body: const Center(
+      body: Center(
         child: Column(
           children: [
-            Text("Account"),
+            const Text("Account"),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green,
+                elevation: 0,
+              ),
+              onPressed: () async {
+                await FirebaseAuth.instance.signOut();
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (context) => const LoginScreen(),
+                ));
+              },
+              child: const Text("Disconnect"),
+            ),
           ],
         ),
       ),
