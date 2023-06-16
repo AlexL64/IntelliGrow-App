@@ -33,10 +33,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'IntelliGrow',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0x00568f23)),
-        useMaterial3: true,
-      ),
       home: _checkIfUserLoggedIn(),
     );
   }
