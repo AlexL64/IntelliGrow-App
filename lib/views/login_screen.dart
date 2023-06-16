@@ -1,35 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
 import 'package:intelli_grow/views/connected.dart';
-
-
-const users = {
-  'test': 'test',
-};
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
   Duration get loginTime => const Duration(milliseconds: 1000);
 
-  Future<String?> _authUser(LoginData data) {
-    debugPrint('Name: ${data.name}, Password: ${data.password}');
-    return Future.delayed(loginTime).then((_) {
-      if (!users.containsKey(data.name.trim())) {
-        return 'User not exists';
+  Future<String?> _authUser(LoginData data) async {
+    try {
+      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: data.name.toString().trim(),
+        password: data.name.toString().trim(),
+      );
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        return 'No user found for that email.';
+      } else if (e.code == 'wrong-password') {
+        return 'Wrong password provided for that user.';
       }
-      if (users[data.name.trim()] != data.password.trim()) {
-        return 'Password does not match';
-      }
-      return null;
-    });
+    }
+    return null;
   }
 
-  Future<String?> _signupUser(SignupData data) {
-    debugPrint('Signup Name: ${data.name}, Password: ${data.password}');
-    return Future.delayed(loginTime).then((_) {
-      return null;
-    });
+  Future<String?> _signupUser(SignupData data) async {
+    try {
+      final credential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: data.name.toString().trim(),
+        password: data.name.toString().trim(),
+      );
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        return 'The password provided is too weak.';
+      } else if (e.code == 'email-already-in-use') {
+        return 'The account already exists for that email.';
+      }
+    } catch (e) {
+      return e.toString();
+    }
+    return null;
   }
 
   @override
@@ -48,7 +59,6 @@ class LoginScreen extends StatelessWidget {
           ),
           child: FlutterLogin(
             userType: LoginUserType.name,
-            userValidator: (_) => null,
             logo: "lib/assets/images/intelligrow_logo_no_background.png",
             onLogin: _authUser,
             onSignup: _signupUser,

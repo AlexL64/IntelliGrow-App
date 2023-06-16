@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>1096289604010-0qjvlraapbi9rknn0b5nh5fein0g5rh1.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1096289604010-0qjvlraapbi9rknn0b5nh5fein0g5rh1</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDIPEI2Nq20T6UlG7m6B6cu_-WiyaswquQ</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1096289604010</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.IntelliGrow.intelliGrow.RunnerTests</string>
+	<key>PROJECT_ID</key>
+	<string>intelligrow-86e8e</string>
+	<key>STORAGE_BUCKET</key>
+	<string>intelligrow-86e8e.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1096289604010:ios:538c716610ed0f30b85bd3</string>
+</dict>
+</plist>

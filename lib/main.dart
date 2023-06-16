@@ -1,14 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:intelli_grow/views/connected.dart';
 import 'views/login_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
+  Widget _checkIfUserLoggedIn() {
+    if (FirebaseAuth.instance.currentUser != null) {
+      return const Connected();
+    } else {
+      return const LoginScreen();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -17,7 +32,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0x00568f23)),
         useMaterial3: true,
       ),
-      home: const LoginScreen(),
+      home: _checkIfUserLoggedIn(),
     );
   }
 }
