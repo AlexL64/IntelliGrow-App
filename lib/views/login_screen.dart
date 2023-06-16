@@ -10,13 +10,11 @@ class LoginScreen extends StatelessWidget {
     try {
       final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: data.name.toString().trim(),
-        password: data.name.toString().trim(),
+        password: data.password.toString().trim(),
       );
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        return 'No user found for that email.';
-      } else if (e.code == 'wrong-password') {
-        return 'Wrong password provided for that user.';
+      if (e.code == 'user-not-found' || e.code == 'wrong-password') {
+        return 'Wrong email or password.';
       }
     }
     return null;
@@ -27,7 +25,7 @@ class LoginScreen extends StatelessWidget {
       final credential =
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: data.name.toString().trim(),
-        password: data.name.toString().trim(),
+        password: data.password.toString().trim(),
       );
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
@@ -37,6 +35,18 @@ class LoginScreen extends StatelessWidget {
       }
     } catch (e) {
       return e.toString();
+    }
+    return null;
+  }
+
+  String? _validatePassword(String? password) {
+    if (password != null) {
+      if (password.isEmpty) {
+        return "Password can't be empty";
+      }
+      if(!password.trim().contains(RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$'))) {
+        return 'The password must contains at least : 8 characters,\n1 Lower case, 1 Upper case, 1 Number and\n1 Special character';
+      }
     }
     return null;
   }
@@ -73,6 +83,7 @@ class LoginScreen extends StatelessWidget {
               pageColorDark: Colors.transparent,
             ),
             hideForgotPasswordButton: true,
+            passwordValidator: _validatePassword,
           ),
         ),
       ),
