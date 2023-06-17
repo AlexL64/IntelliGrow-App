@@ -45,8 +45,21 @@ class LoginScreen extends StatelessWidget {
       }
       if (!password.trim().contains(
           RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$'))) {
-        return 'The password must contains at least : 8 characters,\n1 Lower case, 1 Upper case, 1 Number and\n1 Special character';
+        return 'The password must contains at least : 8 characters,\n1 Lower case, 1 Upper case, 1 Number and\n1 Special character.';
       }
+    }
+    return null;
+  }
+
+  Future<String?> _recoverPassword(String name) async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: name);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        return 'User not found.';
+      }
+    } catch (e) {
+      return e.toString();
     }
     return null;
   }
@@ -66,7 +79,6 @@ class LoginScreen extends StatelessWidget {
             color: Colors.black,
           ),
           child: FlutterLogin(
-            userType: LoginUserType.name,
             logo: "lib/assets/images/intelligrow_logo_no_background.png",
             onLogin: _authUser,
             onSignup: _signupUser,
@@ -75,15 +87,17 @@ class LoginScreen extends StatelessWidget {
                 builder: (context) => const Connected(),
               ));
             },
-            onRecoverPassword: (_) => null,
+            onRecoverPassword: _recoverPassword,
             theme: LoginTheme(
               primaryColor: Colors.green,
               accentColor: Colors.greenAccent,
               pageColorLight: Colors.transparent,
               pageColorDark: Colors.transparent,
             ),
-            hideForgotPasswordButton: true,
             passwordValidator: _validatePassword,
+            messages: LoginMessages(
+              recoverPasswordDescription: 'We will send you an email to change your password.',
+            ),
           ),
         ),
       ),

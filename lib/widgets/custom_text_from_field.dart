@@ -26,7 +26,7 @@ class CustomTextFormField extends StatelessWidget {
         contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
       ),
       controller: controller,
-      obscureText: false,
+      obscureText: true,
       enableSuggestions: false,
       autocorrect: false,
     );

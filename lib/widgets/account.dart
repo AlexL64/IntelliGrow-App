@@ -196,6 +196,9 @@ class _AccountState extends State<Account> {
                               ),
                               onPressed: () {
                                 changePasswordDisplayed = false;
+                                oldPasswordController.text = "";
+                                newPasswordController.text = "";
+                                confirmNewPasswordController.text = "";
                                 setState(() {});
                               },
                               child: const Text("Cancel"),
