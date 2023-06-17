@@ -12,6 +12,9 @@ class LoginScreen extends StatelessWidget {
         email: data.name.toString().trim(),
         password: data.password.toString().trim(),
       );
+      if (credential.user?.emailVerified == false) {
+        return 'Please verify you email';
+      }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found' || e.code == 'wrong-password') {
         return 'Wrong email or password.';
@@ -26,6 +29,7 @@ class LoginScreen extends StatelessWidget {
         email: data.name.toString().trim(),
         password: data.password.toString().trim(),
       );
+      await credential.user?.sendEmailVerification();
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         return 'The password provided is too weak.';
@@ -35,7 +39,7 @@ class LoginScreen extends StatelessWidget {
     } catch (e) {
       return e.toString();
     }
-    return null;
+    return "A verification email has been sent.";
   }
 
   String? _validatePassword(String? password) {
