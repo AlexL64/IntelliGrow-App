@@ -1,9 +1,17 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intelli_grow/views/login_screen.dart';
+import 'package:intelli_grow/widgets/custom_text_from_field.dart';
 
-class Account extends StatelessWidget {
+class Account extends StatefulWidget {
   const Account({super.key});
+
+  @override
+  State<Account> createState() => _AccountState();
+}
+
+class _AccountState extends State<Account> {
+  bool changePasswordDisplayed = false;
 
   showAlertDialog(BuildContext context) {
     Widget cancelButton = TextButton(
@@ -44,6 +52,14 @@ class Account extends StatelessWidget {
     );
   }
 
+  String getEmail() {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser != null) {
+      return currentUser.email.toString();
+    }
+    return "Unknown";
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,19 +71,87 @@ class Account extends StatelessWidget {
         backgroundColor: Colors.grey[50],
         elevation: 0,
       ),
-      body: Center(
-        child: Column(
+      body: Container(
+        padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 30),
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        child: Stack(
           children: [
-            const Text("Account"),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
-                elevation: 0,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Email : ${getEmail()}'),
+                if (changePasswordDisplayed)
+                  Container(
+                    margin: const EdgeInsets.only(top: 25),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        const Text('Old password :'),
+                        const CustomTextFormField(),
+                        const Text('New password :'),
+                        const CustomTextFormField(),
+                        const Text('Confirm new password :'),
+                        const CustomTextFormField(),
+                        Stack(
+                          children: [
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.red,
+                                elevation: 3,
+                              ),
+                              onPressed: () {
+                                changePasswordDisplayed = false;
+                                setState(() {});
+                              },
+                              child: const Text("Cancel"),
+                            ),
+                            Positioned(
+                              right: 0,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.green,
+                                  elevation: 3,
+                                ),
+                                onPressed: () {
+                                  changePasswordDisplayed = false;
+                                  setState(() {});
+                                },
+                                child: const Text("Confirm"),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                if (!changePasswordDisplayed)
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      elevation: 3,
+                    ),
+                    onPressed: () {
+                      changePasswordDisplayed = true;
+                      setState(() {});
+                    },
+                    child: const Text("Change password"),
+                  ),
+              ],
+            ),
+            Positioned(
+              bottom: 0,
+              right: 0,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  elevation: 3,
+                ),
+                onPressed: () {
+                  showAlertDialog(context);
+                },
+                child: const Text("Logout"),
               ),
-              onPressed: () {
-                showAlertDialog(context);
-              },
-              child: const Text("Logout"),
             ),
           ],
         ),
