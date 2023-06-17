@@ -13,6 +13,10 @@ class Account extends StatefulWidget {
 class _AccountState extends State<Account> {
   bool changePasswordDisplayed = false;
 
+  TextEditingController oldPasswordController = TextEditingController();
+  TextEditingController newPasswordController = TextEditingController();
+  TextEditingController confirmNewPasswordController = TextEditingController();
+
   showAlertDialog(BuildContext context) {
     Widget cancelButton = TextButton(
       onPressed: () {
@@ -60,6 +64,88 @@ class _AccountState extends State<Account> {
     return "Unknown";
   }
 
+  Future<void> changePassword() async {
+    if (validatePassword()) {
+      final currentUser = FirebaseAuth.instance.currentUser;
+      if (currentUser != null) {
+        try {
+          final userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+            email: currentUser.email.toString(),
+            password: oldPasswordController.text.trim(),
+          );
+          final user = userCredential.user;
+          await user?.updatePassword(newPasswordController.text.trim());
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: const Text("Password successfully changed"),
+            backgroundColor: Colors.green[600],
+          ));
+          changePasswordDisplayed = false;
+          oldPasswordController.text = "";
+          newPasswordController.text = "";
+          confirmNewPasswordController.text = "";
+          setState(() {});
+        } on FirebaseAuthException catch (e) {
+          if (e.code == 'wrong-password') {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text("Incorrect old password"),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
+        }
+      }
+    }
+  }
+
+  bool validatePassword() {
+    if (oldPasswordController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text("Old password can't be empty."),
+        backgroundColor: Colors.red,
+      ));
+      return false;
+    }
+    if (newPasswordController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text("New password can't be empty."),
+        backgroundColor: Colors.red,
+      ));
+      return false;
+    }
+    if (confirmNewPasswordController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text("Confirm New password can't be empty."),
+        backgroundColor: Colors.red,
+      ));
+      return false;
+    }
+    if (oldPasswordController.text.trim() == newPasswordController.text.trim()) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text("New password can't be the same as the old password."),
+        backgroundColor: Colors.red,
+      ));
+      return false;
+    }
+    if (newPasswordController.text.trim() != confirmNewPasswordController.text.trim()) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text("New password and Confirm new password are different."),
+        backgroundColor: Colors.red,
+      ));
+      return false;
+    }
+    if (!newPasswordController.text.trim().contains(
+        RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$'))) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text(
+            "The new password must contains at least : 8 characters,\n1 Lower case, 1 Upper case, 1 Number and\n1 Special character."),
+        backgroundColor: Colors.red,
+      ));
+      return false;
+    }
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,12 +173,20 @@ class _AccountState extends State<Account> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        const Text('Old password :'),
-                        const CustomTextFormField(),
-                        const Text('New password :'),
-                        const CustomTextFormField(),
-                        const Text('Confirm new password :'),
-                        const CustomTextFormField(),
+                        CustomTextFormField(
+                          label: "Old password",
+                          controller: oldPasswordController,
+                        ),
+                        const SizedBox(height: 10),
+                        CustomTextFormField(
+                          label: "New password",
+                          controller: newPasswordController,
+                        ),
+                        const SizedBox(height: 10),
+                        CustomTextFormField(
+                          label: "Confirm new password",
+                          controller: confirmNewPasswordController,
+                        ),
                         Stack(
                           children: [
                             ElevatedButton(
@@ -114,8 +208,7 @@ class _AccountState extends State<Account> {
                                   elevation: 3,
                                 ),
                                 onPressed: () {
-                                  changePasswordDisplayed = false;
-                                  setState(() {});
+                                  changePassword();
                                 },
                                 child: const Text("Confirm"),
                               ),
