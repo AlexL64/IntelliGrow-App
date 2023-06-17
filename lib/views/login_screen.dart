@@ -13,6 +13,7 @@ class LoginScreen extends StatelessWidget {
         password: data.password.toString().trim(),
       );
       if (credential.user?.emailVerified == false) {
+        await FirebaseAuth.instance.signOut();
         return 'Please verify you email';
       }
     } on FirebaseAuthException catch (e) {
@@ -39,6 +40,7 @@ class LoginScreen extends StatelessWidget {
     } catch (e) {
       return e.toString();
     }
+    await FirebaseAuth.instance.signOut();
     return "A verification email has been sent.";
   }
 
