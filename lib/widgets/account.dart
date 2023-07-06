@@ -17,6 +17,8 @@ class _AccountState extends State<Account> {
   TextEditingController newPasswordController = TextEditingController();
   TextEditingController confirmNewPasswordController = TextEditingController();
 
+
+  // Affiche le dialog pour la confirmation de deconnexion
   showAlertDialog(BuildContext context) {
     Widget cancelButton = TextButton(
       onPressed: () {
@@ -56,6 +58,7 @@ class _AccountState extends State<Account> {
     );
   }
 
+  // Retorune l'email de l'utilisateur actuellement connecté
   String getEmail() {
     final currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser != null) {
@@ -64,27 +67,35 @@ class _AccountState extends State<Account> {
     return "Unknown";
   }
 
+  // Change le mot de passe
   Future<void> changePassword() async {
+    // Si le nouveau mot de passe est validé
     if (validatePassword()) {
       final currentUser = FirebaseAuth.instance.currentUser;
+      // Vérifie que l'utilisateur est connecté (Au cas ou)
       if (currentUser != null) {
         try {
+          // Réauthentifie l'utilisateur (Nécessaire pour chnager le mot de passe avec firebase)
           final userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
             email: currentUser.email.toString(),
             password: oldPasswordController.text.trim(),
           );
           final user = userCredential.user;
+          // Change le mot de passe
           await user?.updatePassword(newPasswordController.text.trim());
+          // Affiche un message de réussite
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: const Text("Password successfully changed"),
             backgroundColor: Colors.green[600],
           ));
+          // Cache le menu pour changer le mot de passe et vide les textFields
           changePasswordDisplayed = false;
           oldPasswordController.text = "";
           newPasswordController.text = "";
           confirmNewPasswordController.text = "";
           setState(() {});
         } on FirebaseAuthException catch (e) {
+          // Affiche une erreur si l'ancien mot de passe n'est pas le bon
           if (e.code == 'wrong-password') {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
@@ -98,6 +109,7 @@ class _AccountState extends State<Account> {
     }
   }
 
+  // Vérification pour le changement de mot de passe
   bool validatePassword() {
     if (oldPasswordController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -167,6 +179,7 @@ class _AccountState extends State<Account> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('Email : ${getEmail()}'),
+                // Affiche le formulaire de changement de mot de passe si changePasswordDisplayed est true
                 if (changePasswordDisplayed)
                   Container(
                     margin: const EdgeInsets.only(top: 25),
@@ -194,6 +207,7 @@ class _AccountState extends State<Account> {
                                 backgroundColor: Colors.red,
                                 elevation: 3,
                               ),
+                              // Cache le formulaire
                               onPressed: () {
                                 changePasswordDisplayed = false;
                                 oldPasswordController.text = "";
@@ -210,6 +224,7 @@ class _AccountState extends State<Account> {
                                   backgroundColor: Colors.green,
                                   elevation: 3,
                                 ),
+                                // Change le mot de passe
                                 onPressed: () {
                                   changePassword();
                                 },
@@ -221,6 +236,7 @@ class _AccountState extends State<Account> {
                       ],
                     ),
                   ),
+                // Affiche le bouton si changePasswordDisplayed est false
                 if (!changePasswordDisplayed)
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
@@ -243,6 +259,7 @@ class _AccountState extends State<Account> {
                   backgroundColor: Colors.green,
                   elevation: 3,
                 ),
+                // Affiche le dialog de deconnexion
                 onPressed: () {
                   showAlertDialog(context);
                 },

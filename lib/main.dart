@@ -8,9 +8,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  //Initialise firebase
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  //Bloque l'affichage en mode protrait
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
@@ -21,10 +25,13 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+  // Vérifie si l'utilisteur est connecté
   Widget _checkIfUserLoggedIn() {
     if (FirebaseAuth.instance.currentUser != null) {
+      // Si l'utilisateur est connecté, affiche la page d'acceuil
       return const Connected();
     } else {
+      // Si l'utilisateur n'est pas connecté, affiche la page de connexion
       return const LoginScreen();
     }
   }

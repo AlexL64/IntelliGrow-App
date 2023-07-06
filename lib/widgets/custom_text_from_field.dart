@@ -4,8 +4,10 @@ class CustomTextFormField extends StatelessWidget {
   const CustomTextFormField({super.key, required this.label, required this.controller});
 
   final String label;
+  // Controller du textFiled pour récupérer ça valeur
   final TextEditingController controller;
 
+  // TextField custom
   @override
   Widget build(BuildContext context) {
     return TextFormField(

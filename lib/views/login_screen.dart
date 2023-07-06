@@ -6,17 +6,21 @@ import 'package:firebase_auth/firebase_auth.dart';
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
+  // Autehentification de l'utilisateur avec firebase
   Future<String?> _authUser(LoginData data) async {
     try {
+      // Essaye de connecter l'utilisateur
       final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: data.name.toString().trim(),
         password: data.password.toString().trim(),
       );
+      // Vérifie si l'adresse email à été verifié
       if (credential.user?.emailVerified == false) {
         await FirebaseAuth.instance.signOut();
         return 'Please verify you email';
       }
     } on FirebaseAuthException catch (e) {
+      // Si mauvais mot de passe ou email
       if (e.code == 'user-not-found' || e.code == 'wrong-password') {
         return 'Wrong email or password.';
       }
@@ -24,12 +28,15 @@ class LoginScreen extends StatelessWidget {
     return null;
   }
 
+  // Création de l'utilisateur avec firebase
   Future<String?> _signupUser(SignupData data) async {
     try {
+      // Essaye de créer un utilisateur
       final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: data.name.toString().trim(),
         password: data.password.toString().trim(),
       );
+      // Envoi l'email de vérification
       await credential.user?.sendEmailVerification();
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
@@ -40,10 +47,13 @@ class LoginScreen extends StatelessWidget {
     } catch (e) {
       return e.toString();
     }
+    // A mieux faire
+    // Décconecte l'utilisateur et lui dit qu'il doir vérifier son email
     await FirebaseAuth.instance.signOut();
     return "A verification email has been sent.";
   }
 
+  // Vérification du mot de passe
   String? _validatePassword(String? password) {
     if (password != null) {
       if (password.isEmpty) {
@@ -57,6 +67,7 @@ class LoginScreen extends StatelessWidget {
     return null;
   }
 
+  // Récupération du mot de passe
   Future<String?> _recoverPassword(String name) async {
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: name);
@@ -70,6 +81,7 @@ class LoginScreen extends StatelessWidget {
     return null;
   }
 
+  // Crée un widget avec FlutterLogin
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
